@@ -15,7 +15,7 @@ public class ApiResponseDTO {
     private String message; 
     private HttpStatus status; 
     private int statusCode; 
-    private LocalDateTime timeStampt = LocalDateTime.now(); 
+    private LocalDateTime timeStamp = LocalDateTime.now();
 
     public ApiResponseDTO(Boolean success, String message, HttpStatus status, int statusCode) {
         this.success = success; 
@@ -25,5 +25,14 @@ public class ApiResponseDTO {
     }
 
 
-    
+    @Override
+    public String toString() {
+        return "ApiResponseDTO{" +
+                "timeStamp=" + timeStamp +
+                ", statusCode=" + statusCode +
+                ", status=" + status +
+                ", message='" + message + '\'' +
+                ", success=" + success +
+                '}';
+    }
 }

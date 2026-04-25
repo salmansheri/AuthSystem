@@ -5,6 +5,7 @@ import com.salman.AuthSystem.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +23,7 @@ import java.util.UUID;
  * @author Salman Sheriff
  *
  */
+@Service
 public class JwtUtils {
 
     private final SecretKey key;
@@ -146,6 +148,17 @@ public class JwtUtils {
      */
     public String getJti(String token) {
         return parseToken(token).getPayload().getId();
+
+    }
+
+    public List<String> getRoles(String token) {
+        Claims claims = parseToken(token).getPayload();
+        return (List<String>)  claims.get("roles");
+    }
+
+    public String getEmail(String token) {
+        Claims claims = parseToken(token).getPayload();
+        return (String) claims.get("email");
 
     }
 
