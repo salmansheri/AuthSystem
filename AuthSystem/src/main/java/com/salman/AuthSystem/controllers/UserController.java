@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,7 +31,7 @@ public class UserController {
    
 
     @GetMapping()
-    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam String param) {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return new ResponseEntity<List<UserDto>>(userService.getAllUsers(), HttpStatus.OK);
     }
 
@@ -46,8 +47,8 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUser(userId, userDto), HttpStatus.OK);
     }
 
-      @PutMapping("/{userId}")
-    public ResponseEntity<ApiResponseDTO> delteUser
+      @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiResponseDTO> deleteUser
     (@PathVariable String userId) {
         
         
