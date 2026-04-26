@@ -1,8 +1,11 @@
 package com.salman.AuthSystem.interfaces;
 
+import com.salman.AuthSystem.dtos.SignInRequestDTO;
+import com.salman.AuthSystem.dtos.SignInResponseDTO;
 import com.salman.AuthSystem.dtos.UserDto;
 
 public interface AuthService {
-    UserDto registerUser(UserDto userDto); 
+    UserDto registerUser(UserDto userDto);
+    SignInResponseDTO signIn(SignInRequestDTO requestDTO);
     // UserDto signIn(); 
 }

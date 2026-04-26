@@ -4,6 +4,8 @@ import com.salman.AuthSystem.models.Role;
 import com.salman.AuthSystem.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import java.util.UUID;
  *
  */
 @Service
+@Getter
+@Setter
 public class JwtUtils {
 
     private final SecretKey key;

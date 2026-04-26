@@ -3,7 +3,10 @@ package com.salman.AuthSystem.filters;
 import com.salman.AuthSystem.repositories.UserRepository;
 import com.salman.AuthSystem.utils.JwtUtils;
 import com.salman.AuthSystem.utils.UserUtils;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,15 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -50,14 +50,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
 
+        log.info("Authorization header: {}", header);
+
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            if (!jwtUtils.isAccessToken(token)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+
 
             try {
+
+                if (!jwtUtils.isAccessToken(token)) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
 
                 Jws<Claims> parse = jwtUtils.parseToken(token);
 
@@ -89,18 +93,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
             } catch (ExpiredJwtException ex) {
-                ex.printStackTrace();
+                request.setAttribute("error", "Token Expired!");
+
 
             } catch (MalformedJwtException ex) {
-                ex.printStackTrace();
-
-
-            } catch (JwtException ex) {
-                ex.printStackTrace();
+                request.setAttribute("error", "Invalid token");
 
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                request.setAttribute("error", "Invalid Token!");
 
 
             }
