@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         // TODO: role assign to new user for authorization
 
-        User savedUser = userRepository.save(user); 
+        User savedUser = userRepository.saveAndFlush(user);
 
         if (savedUser.getUserId() != null) {
             log.info("User Created Successfully");

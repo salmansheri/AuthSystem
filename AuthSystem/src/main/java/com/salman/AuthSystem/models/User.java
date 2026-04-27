@@ -1,12 +1,17 @@
  package com.salman.AuthSystem.models;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,9 +34,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private UUID userId; 
 
   
@@ -65,7 +71,28 @@ public class User {
     @CreationTimestamp
     private LocalDateTime createdAt; 
     @UpdateTimestamp
-    private LocalDateTime updatedAt; 
+    private LocalDateTime updatedAt;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList(); 
+
+        return authorities; 
+        
+       
+    }
+    @Override
+    public String getUsername() {
+        return this.email; 
+       
+    } 
+
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled; 
+    }
+
+   
     
    
 

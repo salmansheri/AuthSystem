@@ -1,0 +1,11 @@
+com.salman.AuthSystem
+com.salman.AuthSystem.config
+com.salman.AuthSystem.controllers
+com.salman.AuthSystem.dtos
+com.salman.AuthSystem.exceptions
+com.salman.AuthSystem.interfaces
+com.salman.AuthSystem.mappers
+com.salman.AuthSystem.models
+com.salman.AuthSystem.repositories
+com.salman.AuthSystem.services
+com.salman.AuthSystem.utils
