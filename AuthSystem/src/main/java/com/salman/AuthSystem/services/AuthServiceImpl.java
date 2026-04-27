@@ -2,12 +2,14 @@ package com.salman.AuthSystem.services;
 
 import com.salman.AuthSystem.dtos.SignInRequestDTO;
 import com.salman.AuthSystem.dtos.SignInResponseDTO;
+import com.salman.AuthSystem.interfaces.CookieService;
 import com.salman.AuthSystem.mappers.UserMapper;
 import com.salman.AuthSystem.models.RefreshToken;
 import com.salman.AuthSystem.models.User;
 import com.salman.AuthSystem.repositories.RefreshTokenRepository;
 import com.salman.AuthSystem.repositories.UserRepository;
 import com.salman.AuthSystem.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -38,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final CookieService cookieService;
 
     @Override
     public UserDto registerUser(UserDto userDto) {
@@ -50,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public SignInResponseDTO signIn(SignInRequestDTO requestDTO) {
+    public SignInResponseDTO signIn(SignInRequestDTO requestDTO, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDTO.getEmail(), requestDTO.getPassword()));
             User user = userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(() -> new BadCredentialsException("Invalid Username!"));
@@ -69,10 +72,13 @@ public class AuthServiceImpl implements AuthService {
                     .revoked(false)
                     .build();
 
-            refreshTokenRepository.save(refreshTokenEntity);
+            RefreshToken savedRefreshTokenEntity = refreshTokenRepository.save(refreshTokenEntity);
 
             String accessToken = jwtUtils.generateAccessToken(user);
-            String refreshToken = jwtUtils.generateRefreshToken(user, refreshTokenEntity.getJti());
+            String refreshToken = jwtUtils.generateRefreshToken(user, savedRefreshTokenEntity.getJti());
+
+            cookieService.attachRefreshTokenCookie(response, refreshToken, (int) jwtUtils.getAccessTtlSeconds());
+            cookieService.addNoStoreHeader(response);
 
 
             return new SignInResponseDTO(

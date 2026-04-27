@@ -5,7 +5,7 @@ spring:
     url: jdbc:postgresql://localhost:5431/authdb
     username: postgres
     password: salman
-    driver-class-name: org.postgresql.Driver 
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -24,17 +24,22 @@ logging:
   level:
     root: INFO
     '[org.springFramework.security]': DEBUG
-    '[org.springframework.web]':  DEBUG
+    '[org.springframework.web]': DEBUG
     '[org.hibernate]': DEBUG
 
 
 security:
-    jwt:
-      secret: ${JWT_SECRET:SAoJs2I1kJ+Yv5OIPcb1R6BrVnl0Rfanhh2gjiwVBnA=}
-      issuer: ${JWT_ISSUER:api.substring.com}
-      access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:3600}
-      refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:86400}
-      refresh-token-cookie-name: ${JWT_REFRESH_TOKEN_COOKIE_NAME:refreshToken}
-      cookie-secure: ${JWT_COOKIE_SECURE:true}
-      cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
-      cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}
+  jwt:
+    secret: ${JWT_SECRET:SAoJs2I1kJ+Yv5OIPcb1R6BrVnl0Rfanhh2gjiwVBnA=}
+    issuer: ${JWT_ISSUER:api.substring.com}
+    access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:3600}
+    refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:86400}
+    refresh-token-cookie-name: ${JWT_REFRESH_TOKEN_COOKIE_NAME:refreshToken}
+    cookie-secure: ${JWT_COOKIE_SECURE:true}
+    cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}
+    cookie-max-age: ${JWT_COOKIE_SAME_SITE:lax}
+#      cookie-domain: ${JWT_COOKIE_DOMAIN:.substring.com}
+
+
+

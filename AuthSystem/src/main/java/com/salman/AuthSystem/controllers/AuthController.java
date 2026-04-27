@@ -4,6 +4,7 @@ import com.salman.AuthSystem.dtos.SignInRequestDTO;
 import com.salman.AuthSystem.dtos.SignInResponseDTO;
 import com.salman.AuthSystem.dtos.UserDto;
 import com.salman.AuthSystem.interfaces.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity<SignInResponseDTO> signIn(@RequestBody SignInRequestDTO requestDTO) {
-        SignInResponseDTO signInResponseDTO = authService.signIn(requestDTO);
+    public ResponseEntity<SignInResponseDTO> signIn(@RequestBody SignInRequestDTO requestDTO, HttpServletResponse response) {
+        SignInResponseDTO signInResponseDTO = authService.signIn(requestDTO, response);
 
         return new ResponseEntity<SignInResponseDTO>(signInResponseDTO, HttpStatus.OK);
     }
