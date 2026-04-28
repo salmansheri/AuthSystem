@@ -7,4 +7,6 @@ public interface CookieService {
      void clearRefreshTokenCookie(HttpServletResponse response);
     void addNoStoreHeader(HttpServletResponse response);
 
+    String getRefreshTokenCookieName();
+
 }

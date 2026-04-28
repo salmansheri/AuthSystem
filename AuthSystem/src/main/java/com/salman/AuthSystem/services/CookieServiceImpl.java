@@ -35,9 +35,11 @@ public class CookieServiceImpl implements CookieService {
         this.cookieSameSite = cookieSameSite;
     }
 
+//    public String getRefreshToken
+
     @Override
     public void attachRefreshTokenCookie(HttpServletResponse response, String value, int maxAge) {
-        ResponseCookie.ResponseCookieBuilder responseCookieBuilder = ResponseCookie.from(refreshTokenCookieName, value)
+        ResponseCookie.ResponseCookieBuilder responseCookieBuilder = ResponseCookie.from(refreshTokenCookieName).value(value)
                 .httpOnly(cookieHttpOnly)
                 .secure(cookieSecure)
                 .path("/")
