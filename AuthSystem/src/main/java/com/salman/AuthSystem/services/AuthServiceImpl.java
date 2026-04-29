@@ -1,8 +1,6 @@
 package com.salman.AuthSystem.services;
 
-import com.salman.AuthSystem.dtos.RefreshTokenRequestDTO;
-import com.salman.AuthSystem.dtos.SignInRequestDTO;
-import com.salman.AuthSystem.dtos.SignInResponseDTO;
+import com.salman.AuthSystem.dtos.*;
 import com.salman.AuthSystem.interfaces.CookieService;
 import com.salman.AuthSystem.mappers.UserMapper;
 import com.salman.AuthSystem.models.RefreshToken;
@@ -10,20 +8,22 @@ import com.salman.AuthSystem.models.User;
 import com.salman.AuthSystem.repositories.RefreshTokenRepository;
 import com.salman.AuthSystem.repositories.UserRepository;
 import com.salman.AuthSystem.utils.JwtUtils;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.salman.AuthSystem.dtos.UserDto;
 import com.salman.AuthSystem.interfaces.AuthService;
 import com.salman.AuthSystem.interfaces.UserService;
 
@@ -167,6 +167,54 @@ public class AuthServiceImpl implements AuthService {
 
         return signInResponseDTO;
 
+
+    }
+
+    @Override
+    public ApiResponseDTO signOut(HttpServletRequest request, HttpServletResponse response) {
+
+        try {
+            Optional<String> tokenOptional = readRefreshTokenFromRequest(null, request);
+
+            if (tokenOptional.isEmpty()) {
+                log.error("Refresh token not found");
+                throw new BadCredentialsException("Refresh token not found");
+
+            }
+
+            String token = tokenOptional.get();
+
+            if (!jwtUtils.isRefreshToken(token)) {
+                log.error("Invalid Refresh Token");
+                throw new BadCredentialsException("Invalid Refresh Token");
+            }
+
+            String jti = jwtUtils.getJti(token);
+
+            refreshTokenRepository.findByJti(jti).ifPresent(refreshTokenEntity -> {
+                refreshTokenEntity.setRevoked(true);
+                refreshTokenRepository.save(refreshTokenEntity);
+            });
+
+            cookieService.clearRefreshTokenCookie(response);
+            cookieService.addNoStoreHeader(response);
+            SecurityContextHolder.clearContext();
+
+
+            return new ApiResponseDTO(
+                    true,
+                    "Sign out successfully",
+                    HttpStatus.OK,
+                    HttpStatus.OK.value()
+            );
+
+
+        } catch (JwtException ex) {
+            log.error("Error(Sign Out): {}", ex.getMessage());
+            throw new BadCredentialsException("Invalid Refresh Token");
+
+
+        }
 
     }
 

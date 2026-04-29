@@ -3,6 +3,9 @@ package com.salman.AuthSystem.config;
 import com.salman.AuthSystem.dtos.ApiResponseDTO;
 import com.salman.AuthSystem.filters.JwtAuthFilter;
 import com.salman.AuthSystem.models.User;
+import com.salman.AuthSystem.utils.AppConstants;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +28,7 @@ import tools.jackson.databind.ObjectMapper;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -38,6 +43,8 @@ public class SecurityConfig {
                                         .requestMatchers("/v3/api-docs/**").permitAll()
                                         .requestMatchers("/swagger-ui.html").permitAll()
                                         .requestMatchers("/error").permitAll()
+                                        .requestMatchers("/api/v1/users/**").hasRole(AppConstants.ROLE_ADMIN)
+
 
 //                    .requestMatchers("/api/v1/users/**").permitAll()
 
@@ -60,7 +67,33 @@ public class SecurityConfig {
                     response.getWriter().write(objectMapper.writeValueAsString(apiResponseDTO));
 
 
-                }));
+                }).accessDeniedHandler(((request, response, accessDeniedException) -> {
+                    response.setStatus(403);
+                    response.setContentType("/application/json");
+                    String message = accessDeniedException.getMessage();
+                    String error = (String) request.getAttribute("error");
+
+                    if (error != null) {
+                        message = error;
+
+                    }
+
+                    ApiResponseDTO apiResponseDTO = new ApiResponseDTO(
+                            false,
+                            message,
+                            HttpStatus.FORBIDDEN,
+                            HttpStatus.FORBIDDEN.value()
+                    );
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+
+                    response.getWriter().write(objectMapper.writeValueAsString(apiResponseDTO));
+
+
+
+
+                        }))
+                );
 
 
         http.csrf(AbstractHttpConfigurer::disable);

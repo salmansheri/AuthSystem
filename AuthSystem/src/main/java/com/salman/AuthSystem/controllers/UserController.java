@@ -1,24 +1,15 @@
 package com.salman.AuthSystem.controllers;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.salman.AuthSystem.dtos.ApiResponseDTO;
 import com.salman.AuthSystem.dtos.UserDto;
 import com.salman.AuthSystem.interfaces.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -32,12 +23,13 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        return new ResponseEntity<List<UserDto>>(userService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable String email) {
-        return new ResponseEntity<UserDto>(userService.getUserByEmail(email), HttpStatus.OK ); 
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
 
     @PutMapping("/{userId}")

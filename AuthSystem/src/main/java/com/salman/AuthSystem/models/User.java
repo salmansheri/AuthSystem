@@ -1,4 +1,4 @@
- package com.salman.AuthSystem.models;
+package com.salman.AuthSystem.models;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -38,63 +38,61 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private UUID userId; 
+    private UUID userId;
 
-  
-    @Column(nullable = false, unique = true)    
-    private String email; 
 
- 
-    private String name; 
+    @Column(nullable = false, unique = true)
+    private String email;
 
-  
-    private String password; 
 
-    
+    private String name;
+
+
+    private String password;
+
+
     @Column(name = "image_url", nullable = true)
-    private String imageUrl; 
+    private String imageUrl;
 
-    
+
     private boolean enabled = true;
-    
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name  = "user_roles",
-        joinColumns = @JoinColumn(name="user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
 
     )
-    private Set<Role> roles = new HashSet<>(); 
+    private Set<Role> roles = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    private Provider provider = Provider.LOCAL; 
-    
+    private Provider provider = Provider.LOCAL;
+
     @CreationTimestamp
-    private LocalDateTime createdAt; 
+    private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList(); 
+        List<SimpleGrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
 
-        return authorities; 
-        
-       
+        return authorities;
+
+
     }
+
     @Override
     public String getUsername() {
-        return this.email; 
-       
-    } 
+        return this.email;
+
+    }
 
 
     @Override
     public boolean isEnabled() {
-        return this.enabled; 
+        return this.enabled;
     }
 
-   
-    
-   
 
-    
 }

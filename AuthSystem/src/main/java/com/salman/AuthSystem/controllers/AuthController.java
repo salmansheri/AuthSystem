@@ -42,8 +42,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-out")
-    public ResponseEntity<ApiResponseDTO> signOut() {
-        return null;
+    public ResponseEntity<ApiResponseDTO> signOut(HttpServletRequest request, HttpServletResponse response) {
+        return new ResponseEntity<ApiResponseDTO>(authService.signOut(request, response), HttpStatus.OK);
     }
 
     @PostMapping("/refresh")
