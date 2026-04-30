@@ -1,4 +1,30 @@
 services:
+  authapp:
+    image: "authapp:latest"
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=salman
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5431/authdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=salman
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET="SAoJs2I1kJ+Yv5OIPcb1R6BrVnl0Rfanhh2gjiwVBnA="
+      - JWT_ISSUER= "api.substring.com"
+      - JWT_ACCESS_TTL_SECONDS="3600"
+      - JWT_REFRESH_TTL_SECONDS="86400"
+      - JWT_REFRESH_TOKEN_COOKIE_NAME="refreshToken"
+      - JWT_COOKIE_SECURE="true"
+      - JWT_COOKIE_HTTP_ONLY="true"
+      - JWT_COOKIE_SAME_SITE="lax"
+      - JWT_COOKIE_MAX_AGE="lax"
+      - JWT_COOKIE_DOMAIN="localhost"
+    ports:
+      - "8081:8081"
   postgres:
     image: 'postgres:latest'
     environment:
