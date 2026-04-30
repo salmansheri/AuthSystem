@@ -2,7 +2,7 @@ spring:
   application:
     name: AuthSystem
   datasource:
-    url: jdbc:postgresql://localhost:5431/authdb
+    url: jdbc:postgresql://localhost:5431/authdb?TimeZone=Asia/Kolkata
     username: postgres
     password: salman
     driver-class-name: org.postgresql.Driver
