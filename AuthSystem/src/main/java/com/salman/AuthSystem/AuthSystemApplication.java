@@ -10,6 +10,7 @@ public class AuthSystemApplication {
 
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
+        System.out.println("Version: 0.0.1");
 
         SpringApplication.run(AuthSystemApplication.class, args);
     }

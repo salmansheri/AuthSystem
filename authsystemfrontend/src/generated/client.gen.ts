@@ -2,7 +2,6 @@
 
 import { type ClientOptions, type Config, createClient, createConfig } from './client';
 import type { ClientOptions as ClientOptions2 } from './types.gen';
-import axios from "axios";
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -12,11 +11,6 @@ import axios from "axios";
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-
-const axiosInstance = axios.create({
-    baseURL: "http://localhost:8081",
-    withCredentials: true
-})
 export type CreateClientConfig<T extends ClientOptions = ClientOptions2> = (override?: Config<ClientOptions & T>) => Config<Required<ClientOptions> & T>;
 
-export const client = createClient(createConfig<ClientOptions2>({ axios: axiosInstance} ));
+export const client = createClient(createConfig<ClientOptions2>({ baseURL: 'http://localhost:8081', withCredentials: true }));

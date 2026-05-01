@@ -1,9 +1,6 @@
-import { defineConfig } from 'vite'
-import { devtools } from '@tanstack/devtools-vite';
-// @ts-ignore
-import { heyApiPlugin} from "@hey-api/openapi-ts";
-
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import {defineConfig} from 'vite'
+import {devtools} from '@tanstack/devtools-vite';
+import {tanstackStart} from '@tanstack/react-start/plugin/vite'
 
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -19,12 +16,7 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
-      heyApiPlugin({
-        config: {
-          input: "openApi.json",
-          output: "src/generated"
-        }
-      })
+
   ],
 })
 

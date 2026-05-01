@@ -46,5 +46,8 @@ security:
     cookie-max-age: ${JWT_COOKIE_SAME_SITE:86400}
     cookie-domain: ${JWT_COOKIE_DOMAIN:localhost}
 
+frontend:
+  url: http://localhost:3000
+
 
 
