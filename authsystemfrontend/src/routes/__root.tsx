@@ -10,12 +10,31 @@ import appCss from '../styles.css?url'
 
 import type {QueryClient} from '@tanstack/react-query';
 import { Toaster} from "@/components/ui/sonner";
+import {client} from "#/generated/client.gen.ts";
+import {useAuth} from "#/lib/store.ts";
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+
+client.instance.interceptors.request.use((request) => {
+  const token = useAuth.getState().accessToken;
+  console.log(token);
+
+  if (!token) {
+    console.error("Token not Provided")
+
+  } else {
+    console.log(`Token  ${token}`)
+    request.headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  return request;
+
+
+});
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({

@@ -2,9 +2,11 @@ import { useMutation} from "@tanstack/react-query";
 import { toast} from "sonner";
 import { useNavigate} from "@tanstack/react-router";
 import { signOutMutation } from "#/generated/@tanstack/react-query.gen.ts";
+import {useAuth} from "#/lib/store.ts";
 
 export const useSignOut = () => {
     const navigate = useNavigate();
+    const { signOut } = useAuth();
     return useMutation({
         ...signOutMutation(),
         onError: (error) => {
@@ -20,6 +22,7 @@ export const useSignOut = () => {
         onSuccess: (data) => {
 
             console.log(data);
+            signOut(true);
             toast.success("sign in successfully created!");
             navigate({ to: "/sign-in"});
         },

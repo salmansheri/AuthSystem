@@ -21,6 +21,7 @@ import {
 import { Input } from "#/components/ui/input";
 import { useSignIn } from "#/hooks/user/use-sign-in.ts";
 import { cn } from "#/lib/utils";
+import {useAuth} from "#/lib/store.ts";
 
 const formSchema = z.object({
 
@@ -33,6 +34,7 @@ export function LoginForm({
 	...props
 }: React.ComponentProps<"div">) {
 	const signInMutation = useSignIn();
+
 	const form = useForm({
 		defaultValues: {
 			email: "",
@@ -45,12 +47,14 @@ export function LoginForm({
 		onSubmit: async ({ value }) => {
 			toast.success("Submitted");
 
+
 			signInMutation.mutate({
 				body: {
 					email: value.email,
 
 					password: value.password,
 				},
+
 			});
 		},
 	});

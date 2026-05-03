@@ -2,8 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { signInMutation } from "#/generated/@tanstack/react-query.gen.ts";
 import { useNavigate} from "@tanstack/react-router";
+import {useAuth} from "#/lib/store.ts";
 
 export const useSignIn = () => {
+	const { signIn } = useAuth();
 	const navigate = useNavigate();
 	return useMutation({
 		...signInMutation(),
@@ -21,6 +23,7 @@ export const useSignIn = () => {
 
 			console.log(data);
 			toast.success("sign in successfully created!");
+			signIn(data);
 			navigate({ to: "/"});
 		},
 	});

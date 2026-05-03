@@ -4,6 +4,7 @@ import {useSignOut} from "#/hooks/user/use-sign-out.ts";
 
 export const Route = createFileRoute('/')({
   component: App,
+
 })
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   return (
     <Button onClick={handleSignOut}>
           Sign out
+
       </Button>
   )
 }
